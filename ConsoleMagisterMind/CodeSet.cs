@@ -9,7 +9,12 @@ namespace ConsoleMagisterMind
 	/// </summary>
 	public class CodeSet
 	{
-		public ArrayList items;
+		public ArrayList Items;
+		// This is simply for translating between integers and whatever item I'll be outputting to the Console,
+		// and taking in From there as well.
+		// Used to be an Enum.  Harder to translate between in this console context.  We'll see about the GUI side.
+		public static string CodeItems = "ABCDEFGHIJKL";
+
 
 		public CodeSet() : this(ProgramConfig.CodeSize) {
 			// We sent this through the other Constructor so we have the flexibility but really only 
@@ -17,7 +22,12 @@ namespace ConsoleMagisterMind
 		}
 
 		public CodeSet(int CodeSize) {
-			items = new ArrayList(CodeSize);
+			Items = new ArrayList(CodeSize);
+		}
+
+		public CodeSet(string code) {
+			Items = new ArrayList(code.Length);
+			SetFromString(code);
 		}
 
 		/// <summary>
@@ -25,9 +35,24 @@ namespace ConsoleMagisterMind
 		/// </summary>
 		public void Randomize() {
 			int x = 0;
-			while (x < items.Capacity) {
-				items[x] = new Random().Next(0, ProgramConfig.CodesPossible - 1);
+			while (x < Items.Capacity) {
+				Items[x] = new Random().Next(0, ProgramConfig.CodesPossible - 1);
 				x++;
+			}
+		}
+
+		/// <summary>
+		/// Sets a CodeSet to an input String, converting to appropriate CodeItems
+		/// </summary>
+		/// <param name="input">The input string, which must be appropriate length</param>
+		public void SetFromString(string input) {
+			if (input.Length != Items.Capacity) {
+				throw new Exception("Input string is not of appropriate length (" + Items.Capacity.ToString() + ")");
+			}
+			int x = 0;
+			input = input.ToUpper();
+			while (x < Items.Capacity) {
+				Items[x] = CodeItems.IndexOf(input[x]);
 			}
 		}
 
@@ -36,14 +61,14 @@ namespace ConsoleMagisterMind
 		/// </summary>
 		/// <returns>"Code:\tItems\n</returns>
 		public override string ToString() {
-			string r = "Code:\t";
+			string returnValue = "Code:\t";
 
 			int x = 0;
-			while (x < items.Capacity) {
-				r = r + items[x] + ", ";
+			while (x < Items.Capacity) {
+				returnValue = returnValue + CodeItems[Items[x]] + ", ";
 			}
 			
-			return r + "\n";
+			return returnValue + "\n";
 		}
 
 		/// <summary>
@@ -61,12 +86,12 @@ namespace ConsoleMagisterMind
 				return false;
 			}
 			
-			if (this.items.Capacity != other.items.Capacity) {
+			if (this.Items.Capacity != other.Items.Capacity) {
 				return false;
 			}
 
-			while (x < items.Capacity) {
-				if (this.items[x] != other.items[x]) {
+			while (x < Items.Capacity) {
+				if (this.Items[x] != other.Items[x]) {
 					return false;
 				}
 				x++;
