@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -17,7 +18,7 @@ namespace ConsoleMagisterMind
 
 		static void Main(string[] args) {
 			bool playing = true;
-			LastLetterChoosable = ((CodeItems) ProgramConfig.CodesPossible).ToString().ToUpper();
+			LastLetterChoosable = CodeSet.CodeItems[ProgramConfig.CodesPossible].ToString();
 
 			while (playing) {
 				SetupNewGame();
@@ -28,6 +29,7 @@ namespace ConsoleMagisterMind
 					GetGuess();
 					GuessesMade++;
 					// TODO: How best to check if we've won, and how do we want to output the Right color/spot results?
+
 				}
 				Console.Write("Continue playing? (Y/N)");
 				if ("Y" == Console.ReadLine().ToUpper()) {
@@ -54,8 +56,20 @@ namespace ConsoleMagisterMind
 					Console.WriteLine("Try again.");
 				}
 				Console.WriteLine("Your guess: " + playerGuess);
-				// This totally isn't finished
-				guessing = false;
+				Guesses[GuessesMade] = new CodeSet(ProgramConfig.CodeSize);
+				try {
+					((CodeSet) Guesses[GuessesMade]).SetFromString(playerGuess);
+				}
+				// The thought here is that we'll only get an exception if it's the wrong length.
+				// This is, of course, rather silly of us and should probably be cleaned up in the future
+				// ToDo: Somday, make this NOT a travesty of exception handling laziness
+				catch (Exception e) {
+					Console.WriteLine(e.Message);
+					Guesses[GuessesMade] = null;
+				}
+				if (Guesses[GuessesMade] != null) {
+					guessing = false;
+				}
 			}
 		}
 
