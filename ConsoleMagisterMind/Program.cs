@@ -29,9 +29,15 @@ namespace ConsoleMagisterMind
 					GuessesMade++;
 					// TODO: How best to check if we've won, and how do we want to output the Right color/spot results?
 				}
-				// TODO: We'll want a question to continue playing or not
-				playing = false;
-				Console.WriteLine("Thanks for playing!");
+				Console.Write("Continue playing? (Y/N)");
+				if ("Y" == Console.ReadLine().ToUpper()) {
+					playing = true;
+					Console.WriteLine("OK, we'll setup another round!");
+				}
+				else {
+					playing = false;
+					Console.WriteLine("Thanks for playing!");
+				}
 			}
 
 		}
