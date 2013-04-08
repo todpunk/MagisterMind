@@ -39,9 +39,10 @@ namespace ConsoleMagisterMind
 			while (guessing) {
 				string playerGuess = Console.ReadLine();
 				Console.WriteLine("Your guess: " + playerGuess);
+                // We could get fancy here and compare that their guess is valid before cleanup, but we're just prototyping
 				playerGuess = CleanInput(playerGuess);
-				if (playerGuess.Length > ProgramConfig.CodeSize) {
-					Console.WriteLine("That's too long.  Your guess: " + playerGuess);
+				if (playerGuess.Length != ProgramConfig.CodeSize) {
+					Console.WriteLine("That's not 4 characters long.  Your guess: " + playerGuess);
 					Console.WriteLine("Try again.");
 				}
 				Console.WriteLine("Your guess: " + playerGuess);
@@ -58,8 +59,9 @@ namespace ConsoleMagisterMind
 
 		private static string CleanInput(string strIn) {
 			// TODO: Get this working, holy hell.
-			// Replace invalid characters with empty strings.
-			return Regex.Replace(strIn, "[a-zA-Z0-9 -]", "");
+            // Replace invalid characters with empty strings.
+            //return Regex.Replace(strIn, "[a-zA-Z0-9 -]", "");
+            return Regex.Replace(strIn.ToUpper(), "[^A-L]", "");
 		}
 	}
 }
