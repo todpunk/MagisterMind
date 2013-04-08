@@ -56,7 +56,7 @@ namespace ConsoleMagisterMind
 					Console.WriteLine("Try again.");
 				}
 				Console.WriteLine("Your guess: " + playerGuess);
-				Guesses[GuessesMade] = new CodeSet(ProgramConfig.CodeSize);
+				Guesses.Insert(GuessesMade, new CodeSet(ProgramConfig.CodeSize));
 				try {
 					((CodeSet) Guesses[GuessesMade]).SetFromString(playerGuess);
 				}

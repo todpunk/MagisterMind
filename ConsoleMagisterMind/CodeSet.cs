@@ -36,7 +36,7 @@ namespace ConsoleMagisterMind
 		public void Randomize() {
 			int x = 0;
 			while (x < Items.Capacity) {
-				Items[x] = new Random().Next(0, ProgramConfig.CodesPossible - 1);
+				Items.Insert(x, new Random().Next(0, ProgramConfig.CodesPossible - 1));
 				x++;
 			}
 		}
@@ -52,7 +52,8 @@ namespace ConsoleMagisterMind
 			int x = 0;
 			input = input.ToUpper();
 			while (x < Items.Capacity) {
-				Items[x] = CodeItems.IndexOf(input[x]);
+				Items.Insert(x, CodeItems.IndexOf(input[x]));
+				x++;
 			}
 		}
 
@@ -65,7 +66,8 @@ namespace ConsoleMagisterMind
 
 			int x = 0;
 			while (x < Items.Capacity) {
-				returnValue = returnValue + CodeItems[Items[x]] + ", ";
+				returnValue = returnValue + CodeItems[(int)Items[x]] + ", ";
+				x++;
 			}
 			
 			return returnValue + "\n";
