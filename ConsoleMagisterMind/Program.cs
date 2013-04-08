@@ -13,13 +13,15 @@ namespace ConsoleMagisterMind
 		public static ArrayList Guesses;
 		public static CodeSet TheCode;
 		public static int GuessesMade;
+		public static string LastLetterChoosable;
 
 		static void Main(string[] args) {
 			bool playing = true;
+			LastLetterChoosable = ((CodeItems) ProgramConfig.CodesPossible).ToString().ToUpper();
 
 			while (playing) {
 				SetupNewGame();
-				Console.WriteLine("Guess the code!  We need " + ProgramConfig.CodeSize + " guesses from A to " + ((CodeItems)ProgramConfig.CodesPossible).ToString());
+				Console.WriteLine("Guess the code!  We need " + ProgramConfig.CodeSize + " guesses from A to " + LastLetterChoosable);
 				Console.WriteLine("You have " + ProgramConfig.Guesses + " guesses.");
 				while (GuessesMade < ProgramConfig.Guesses) {
 					Console.WriteLine("What's your guess? ");
@@ -58,10 +60,9 @@ namespace ConsoleMagisterMind
 		}
 
 		private static string CleanInput(string strIn) {
-			// TODO: Get this working, holy hell.
             // Replace invalid characters with empty strings.
             //return Regex.Replace(strIn, "[a-zA-Z0-9 -]", "");
-            return Regex.Replace(strIn.ToUpper(), "[^A-L]", "");
+			return Regex.Replace(strIn.ToUpper(), "[^A-" + LastLetterChoosable + "]", "");
 		}
 	}
 }
