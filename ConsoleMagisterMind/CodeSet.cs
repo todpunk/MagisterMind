@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System;
 
 namespace ConsoleMagisterMind
@@ -9,34 +10,35 @@ namespace ConsoleMagisterMind
 	/// </summary>
 	public class CodeSet
 	{
-		public ArrayList Items;
+		public List<char> Items;
 		// This is simply for translating between integers and whatever item I'll be outputting to the Console,
 		// and taking in From there as well.
 		// Used to be an Enum.  Harder to translate between in this console context.  We'll see about the GUI side.
 		public static string CodeItems = "ABCDEFGHIJKL";
 
 
-		public CodeSet() : this(ProgramConfig.CodeSize) {
+		public CodeSet(): this(CodeItems.Length) {
 			// We sent this through the other Constructor so we have the flexibility but really only 
 			// one code path to debug
 		}
 
 		public CodeSet(int CodeSize) {
-			Items = new ArrayList(CodeSize);
+			Items = new List<char>(CodeSize);
 		}
 
 		public CodeSet(string code) {
-			Items = new ArrayList(code.Length);
+			Items = new List<char>(code.Length);
 			SetFromString(code);
 		}
 
 		/// <summary>
 		/// Set the CodeSet to a random set of items within the allowed set of results;
 		/// </summary>
-		public void Randomize() {
+		public void Randomize(int possible) {
 			int x = 0;
+			Random ourRandom = new Random();
 			while (x < Items.Capacity) {
-				Items.Insert(x, new Random().Next(0, ProgramConfig.CodesPossible - 1));
+				Items.Insert(x, CodeItems[ourRandom.Next(0, possible - 1)]);
 				x++;
 			}
 		}
@@ -47,13 +49,19 @@ namespace ConsoleMagisterMind
 		/// <param name="input">The input string, which must be appropriate length</param>
 		public void SetFromString(string input) {
 			if (input.Length != Items.Capacity) {
-				throw new Exception("Input string is not of appropriate length (" + Items.Capacity.ToString() + ")");
+				throw new Exception("Input string is not of appropriate length (" + Items.Capacity + ")");
 			}
 			int x = 0;
 			input = input.ToUpper();
 			while (x < Items.Capacity) {
-				Items.Insert(x, CodeItems.IndexOf(input[x]));
-				x++;
+				if (CodeItems.Contains(input[x].ToString())) {
+					Items.Insert(x, input[x]);
+					x++;
+				}
+				else {
+					// We throw this exception because if we accept characters not in CodeItems, it will break other behaviors in unexpected ways
+					throw new Exception("This character is not in CodeItems: " + input[x]);
+				}
 			}
 		}
 
